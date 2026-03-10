@@ -1,7 +1,50 @@
 {
   "extends": "@react-native/typescript-config",
   "compilerOptions": {
-    "types": ["jest"]
+    /* Target & Runtime */
+    "target": "ES2022",                /* Hermes V1 (RN 0.84+) stable target */
+    "lib": ["ES2022"],                /* Matches target for API availability */
+    "module": "ESNext",               /* Allows Metro to handle tree-shaking */
+    "moduleResolution": "bundler",    /* Modern resolution for Metro/Bundlers */
+    
+    /* Basic Options */
+    "allowJs": true,
+    "jsx": "react-native",
+    "noEmit": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+
+    /* Type Checking */
+    "strict": true,
+
+    /* Path Aliases */
+    "baseUrl": "./",
+    "paths": {
+      "_assets": ["./src/assets/index"],
+      "_assets/*": ["./src/assets/*"],
+      "_navigation": ["./src/navigation/index"],
+      "_navigation/*": ["./src/navigation/*"],
+      "_components": ["./src/components/index"],
+      "_components/*": ["./src/components/*"],
+      "_mock-data": ["./src/mock-data/index"],
+      "_mock-data/*": ["./src/mock-data/*"],
+      "_screens": ["./src/screens/index"],
+      "_screens/*": ["./src/screens/*"],
+      "_store": ["./src/store/index"],
+      "_store/*": ["./src/store/*"],
+      "_styles": ["./src/styles/index"],
+      "_styles/*": ["./src/styles/*"],
+      "_utils": ["./src/utils/index"],
+      "_utils/*": ["./src/utils/*"],
+      "_hooks": ["./src/hooks/index"],
+      "_hooks/*": ["./src/hooks/*"],
+      "_services": ["./src/services/index"],
+      "_services/*": ["./src/services/*"],
+      "_types": ["./src/types/index"],
+      "_types/*": ["./src/types/*"]
+    }
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["**/node_modules", "**/Pods"]
