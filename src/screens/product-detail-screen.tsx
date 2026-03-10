@@ -54,9 +54,9 @@ export const ProductDetailScreen = ({ navigation }: any) => {
   const [isFlying, setIsFlying] = useState(false);
   const [isFlyImageFailed, setIsFlyImageFailed] = useState(false);
 
-  const onScroll = useAnimatedScrollHandler(event => {
-    scrollX.value = event.contentOffset.x;
-  });
+  // const onScroll = useAnimatedScrollHandler(event => {
+  //   scrollX.value = event.contentOffset.x;
+  // });
 
   const hapticTrigger = (type: HapticFeedbackTypes) => {
     ReactNativeHapticFeedback.trigger(type, {
@@ -65,7 +65,6 @@ export const ProductDetailScreen = ({ navigation }: any) => {
     });
   };
 
-  // FIXED: Trigger animation INSIDE the measurement callback
   const handleAddToCartAction = () => {
     if (isFlying || !cartRef.current) return;
 
@@ -78,23 +77,27 @@ export const ProductDetailScreen = ({ navigation }: any) => {
       // 2. Prepare and Start Animation
       flyX.value = 0;
       flyY.value = 0;
-      runOnJS(setIsFlying)(true);
+      setIsFlying(true);
       hapticTrigger(HapticFeedbackTypes.impactMedium);
+
+      const onFlyAnimationFinish = (finished?: boolean) => {
+        'worklet';
+        if (!finished) return;
+
+        cartScale.value = withSequence(withSpring(1.5), withSpring(1));
+        flyScale.value = 0;
+
+        runOnJS(addToCart)(product.id);
+        runOnJS(setIsFlying)(false);
+        runOnJS(hapticTrigger)(HapticFeedbackTypes.notificationSuccess);
+      };
 
       flyScale.value = withSpring(1);
       flyX.value = withSpring(targetXValue, { damping: 30, stiffness: 90 });
       flyY.value = withSpring(
         targetYValue,
         { damping: 30, stiffness: 90 },
-        finished => {
-          if (finished) {
-            cartScale.value = withSequence(withSpring(1.5), withSpring(1));
-            flyScale.value = 0;
-            runOnJS(addToCart)(product.id);
-            runOnJS(setIsFlying)(false);
-            runOnJS(hapticTrigger)(HapticFeedbackTypes.notificationSuccess);
-          }
-        },
+        onFlyAnimationFinish,
       );
     });
   };
@@ -102,7 +105,7 @@ export const ProductDetailScreen = ({ navigation }: any) => {
   const flyStyle = useAnimatedStyle(() => ({
     position: 'absolute',
     bottom: insets.bottom + 48,
-    left: 0, // Anchoring horizontally for center alignment
+    left: 0,
     right: 0,
     alignItems: 'center',
     zIndex: 9999,

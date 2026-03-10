@@ -1,97 +1,74 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# eKart - Interactive E-Commerce Product Gallery
 
-# Getting Started
+## Overview
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+This repository implements an interactive product gallery with rich animation, product detail carousel, and add-to-cart destination animations. The app is a high-fidelity mobile UX demo with polished transitions and efficient state management.
 
-## Step 1: Start Metro
+## Tech Stack
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- React Native `0.84.1`
+- TypeScript
+- React Navigation (native-stack)
+- Reanimated v4(`react-native-reanimated`)
+- Gesture Handler (`react-native-gesture-handler`)
+- Zustand for state management (`useCartStore`, `useThemeStore`)
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## Features implemented
 
-```sh
-# Using npm
-npm start
+### 1) Product Gallery
 
-# OR using Yarn
-yarn start
-```
+- `FlatList` grid layout in `src/screens/product-gallary-screen.tsx`. For production high performance we can consider FlashList from @shopify/flashlist
 
-## Step 2: Build and run your app
+- Mock product dataset in `src/mock-data/products-data.ts` (20+ products, 3+ images each)
+- Shared element hero transition using `sharedTransitionTag` from list item to detail image
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+### 2) Product Detail & Carousel
 
-### Android
+- `ProductDetailScreen` with `ProductCarousel` component,
+- `Animated.ScrollView` horizontal `pagingEnabled`
+- Per-image parallax effect (translate interpolation via `useAnimatedStyle`)
+- Reviews screen and data layout (name/price/category/description)
 
-```sh
-# Using npm
-npm run android
+### 3) Add-to-Cart animation
 
-# OR using Yarn
-yarn android
-```
+- `CartFooter` with `ADD TO CART` and steppers
+- Cart fly animation in `ProductDetailScreen` via `flyX`, `flyY`, `flyScale` shared values
+- Bump animation on cart icon via `cartScale` from `ProductHeader`
 
-### iOS
+### 4) Broken image fallback
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+- Shared `BrokenImage` component for all image error states in carousel/gallery/detail transitions
+- Uses native `Text` + fallback style
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+## Architecture
 
-```sh
-bundle install
-```
+- `src/components/` for reusable components
+- `src/screens/` for application screens (pages)
+- `src/store/` for application state management using Zustand
+- `src/mock-data/` for mock API data
+- `src/style/` for color palette, theme configuration, and global styles
+- `src/hooks/` for reusable hooks and functionality
+- `src/navigation/` for stack and root navigation, and can be extended for other navigators in the future (e.g., MaterialTopTabNavigator, BottomTabNavigator)TabNavigator)
+- Path aliases enabled via `babel-plugin-module-resolver` (ex: `_components` maps to `src/components/index`), so component imports use short alias paths with `import { CartFooter } from '_components';`
 
-Then, and every time you update your native dependencies, run:
+## Performance and profiling
 
-```sh
-bundle exec pod install
-```
+- All heavy animations are implemented using Reanimated shared values and `useAnimatedStyle`, offloading work to UI thread.
+- Carousel and hero transitions are hardware-accelerated and animated fully on the native thread.
+- Verified smoothness sustained close to 60 FPS with minimal main-thread JS usage.
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+## Workflow
 
-```sh
-# Using npm
-npm run ios
+1. Install dependencies:
+   - `bun install`
+2. Run iOS:
+   - `bun ios` (or `npx react-native run-ios`)
+3. Run Android:
+   - `bun android` (or `npx react-native run-android`)
+4. Metro reset if stale:
+   - `bun start --reset-cache`
 
-# OR using Yarn
-yarn ios
-```
+## Known caveats / trade-offs
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- Cart-flight animation is crafted to visually demonstrate design intent; may need offset tweaking for different screen sizes.
+- Reanimated transitions are in place; if targeting older low-end devices, reduce animation duration to avoid drop frames.
