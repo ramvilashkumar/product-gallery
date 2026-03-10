@@ -4,6 +4,8 @@
 
 This repository implements an interactive product gallery with rich animation, product detail carousel, and add-to-cart destination animations. The app is a high-fidelity mobile UX demo with polished transitions and efficient state management.
 
+- Demo video available in this repo: `demo.mov`
+
 ## Tech Stack
 
 - React Native `0.84.1`
