@@ -4,7 +4,7 @@
 
 This repository implements an interactive product gallery with rich animation, product detail carousel, and add-to-cart destination animations. The app is a high-fidelity mobile UX demo with polished transitions and efficient state management.
 
-- Demo video link: https://drive.google.com/file/d/1rag5nNhiP2SlFzI-E9gWcex2bEWI45JP/view?usp=share_link
+- Demo video link: https://drive.google.com/file/d/1mAlhoGQnRQ3HHMDPSnAYS9VYkR5PlU1F/view?usp=share_link
 
 ## Tech Stack
 
